@@ -1,5 +1,6 @@
 package models.validators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import actions.views.EmployeeView;
@@ -22,7 +23,7 @@ public class EmployeeValidator {
      */
     public static List<String> validate(
              EmployeeService service, EmployeeView ev, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
-        List<String> errors = new AllayList<String>();
+        List<String> errors = new ArrayList<String>();
 
         //社員番号のチェック
         String codeError = validateCode(service, ev.getCode(), codeDuplicateCheckFlag);
@@ -37,7 +38,7 @@ public class EmployeeValidator {
         }
 
         //パスワードのチェック
-        String passError = validatePasswword(ev.getPassword(),passwordCheckFlag);
+        String passError = validatePassword(ev.getPassword(),passwordCheckFlag);
         if (!passError.equals("")) {
             errors.add(passError);
         }

@@ -15,7 +15,7 @@ import utils.EncryptUtil;
 /**
  * 従業員テーブルの操作に関わる処理を行うクラス
  */
-public class EmployeeService {
+public class EmployeeService extends ServiceBase{
 
 
     /**
@@ -24,7 +24,7 @@ public class EmployeeService {
      * @return 表示するデータのリスト
      */
     public List<EmployeeView> getPerPage(int page) {
-        List<Employee> employees = em.createdNameQuery(JpaConst.Q_EMP_GET_ALL,Employee.class)
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_ALL,Employee.class)
                 .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
                 .setMaxResults(JpaConst.ROW_PER_PAGE)
                 .getResultList();
@@ -37,7 +37,7 @@ public class EmployeeService {
      * @return 従業員テーブルのデータの件数
      */
     public long countALL() {
-        long empCount = (long) em.createNameQuery(JpaConst.Q_EMP_COUNT,Long.class)
+        long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT, Long.class)
                 .getSingleResult();
 
         return empCount;
@@ -57,7 +57,7 @@ public class EmployeeService {
             String pass = EncryptUtil.getPasswordEncrypt(plainPass, pepper);
 
             //社員番号とハッシュ化済パスワードを条件に未削除の従業員を1件取得する
-            e = em.createNameQuery(JpaConst.Q_EMP_GET_BYCODE_AND_PASS, Employee.class)
+            e = em.createNamedQuery(JpaConst.Q_EMP_GET_BY_CODE_AND_PASS, Employee.class)
                     .setParameter(JpaConst.JPQL_PARM_CODE, code)
                     .setParameter(JpaConst.JPQL_PARM_PASSWORD, pass)
                     .getSingleResult();
@@ -87,7 +87,7 @@ public class EmployeeService {
     public long countByCode(String code) {
 
         //指定した社員番号を保持する従業員の件数を取得する
-        long employees_count = (long) em.createNameQuery(JpaConst.Q_EMP_COUNT_REGISTERED_BY_CODE, Long.class)
+        long employees_count = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_REGISTERED_BY_CODE, Long.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
                 .getSingleResult();
         return employees_count;
@@ -102,7 +102,7 @@ public class EmployeeService {
     public List<String> create(EmployeeView ev, String pepper) {
 
         //パスワードをハッシュ化
-        String pass = EncrypyUtil.getPasswordencrypt(ev.getPassword(), pepper);
+        String pass = EncryptUtil.getPasswordEncrypt(ev.getPassword(), pepper);
         ev.setPassword(pass);
 
         //登録日時、公人日時は現在時刻を設定する
@@ -131,7 +131,7 @@ public class EmployeeService {
     public List<String> update(EmployeeView ev, String pepper) {
 
         //idを条件に登録済みの従業員情報を取得する
-        EmployeeView saveEMP = findOne(ev.getId());
+        EmployeeView savedEmp = findOne(ev.getId());
 
         boolean validateCode = false;
         if(!savedEmp.getCode().equals(ev.getCode())) {
@@ -204,7 +204,7 @@ public class EmployeeService {
     public Boolean validateLogin(String code, String plainPass, String pepper) {
 
         boolean isValidEmployee = false;
-        if (code != null && !code.equals("") && plainPass != && !plainPass.equals("")) {
+        if (code != null && !code.equals("") && plainPass != null && !plainPass.equals("")) {
             EmployeeView ev = findOne(code, plainPass, pepper);
 
             if (ev != null && ev.getId() != null) {
