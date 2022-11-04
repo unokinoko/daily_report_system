@@ -15,8 +15,7 @@ import utils.EncryptUtil;
 /**
  * 従業員テーブルの操作に関わる処理を行うクラス
  */
-public class EmployeeService extends ServiceBase{
-
+public class EmployeeService extends ServiceBase {
 
     /**
      * 指定されたページ数の一覧画面に表示するデータを取得し、EmployeeViewのリストで返却する
@@ -24,7 +23,7 @@ public class EmployeeService extends ServiceBase{
      * @return 表示するデータのリスト
      */
     public List<EmployeeView> getPerPage(int page) {
-        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_ALL,Employee.class)
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_ALL, Employee.class)
                 .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
                 .setMaxResults(JpaConst.ROW_PER_PAGE)
                 .getResultList();
@@ -36,7 +35,7 @@ public class EmployeeService extends ServiceBase{
      * 従業員テーブルのデータの件数を取得し、返却する
      * @return 従業員テーブルのデータの件数
      */
-    public long countALL() {
+    public long countAll() {
         long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT, Long.class)
                 .getSingleResult();
 
@@ -70,7 +69,7 @@ public class EmployeeService extends ServiceBase{
     }
 
     /**
-     * idを条件に取得したデータのEmployeeViewのインスタンスで返却する
+     * idを条件に取得したデータをEmployeeViewのインスタンスで返却する
      * @param id
      * @return 取得データのインスタンス
      */
@@ -96,16 +95,16 @@ public class EmployeeService extends ServiceBase{
     /**
      * 画面から入力された従業員の登録内容を元にデータを1件作成し、従業員テーブルに登録する
      * @param ev 画面から入力された従業員の登録内容
-     * @param pepper peppre文字列
-     * @return パリデーションや登録処理中に発生したエラーのリスト
+     * @param pepper pepper文字列
+     * @return バリデーションや登録処理中に発生したエラーのリスト
      */
     public List<String> create(EmployeeView ev, String pepper) {
 
-        //パスワードをハッシュ化
+        //パスワードをハッシュ化して設定
         String pass = EncryptUtil.getPasswordEncrypt(ev.getPassword(), pepper);
         ev.setPassword(pass);
 
-        //登録日時、公人日時は現在時刻を設定する
+        //登録日時、更新日時は現在時刻を設定する
         LocalDateTime now = LocalDateTime.now();
         ev.setCreatedAt(now);
         ev.setUpdatedAt(now);
@@ -118,12 +117,12 @@ public class EmployeeService extends ServiceBase{
             create(ev);
         }
 
-        //エラーを返却(エラーがなければ0件の空リスト）
+        //エラーを返却（エラーがなければ0件の空リスト）
         return errors;
     }
 
     /**
-     * 画面から入力された従業員の更新内容を元にデータを1件化作成し、従業員テーブルを更新する
+     * 画面から入力された従業員の更新内容を元にデータを1件作成し、従業員テーブルを更新する
      * @param ev 画面から入力された従業員の登録内容
      * @param pepper pepper文字列
      * @return バリデーションや更新処理中に発生したエラーのリスト
@@ -134,7 +133,7 @@ public class EmployeeService extends ServiceBase{
         EmployeeView savedEmp = findOne(ev.getId());
 
         boolean validateCode = false;
-        if(!savedEmp.getCode().equals(ev.getCode())) {
+        if (!savedEmp.getCode().equals(ev.getCode())) {
             //社員番号を更新する場合
 
             //社員番号についてのバリデーションを行う
@@ -144,7 +143,7 @@ public class EmployeeService extends ServiceBase{
         }
 
         boolean validatePass = false;
-        if(ev.getPassword() != null && !ev.getPassword().equals("")) {
+        if (ev.getPassword() != null && !ev.getPassword().equals("")) {
             //パスワードに入力がある場合
 
             //パスワードについてのバリデーションを行う
@@ -170,7 +169,7 @@ public class EmployeeService extends ServiceBase{
             update(savedEmp);
         }
 
-        //エラーを返却（エラーがなければ0件の空リスト)
+        //エラーを返却（エラーがなければ0件の空リスト）
         return errors;
     }
 
@@ -187,19 +186,20 @@ public class EmployeeService extends ServiceBase{
         LocalDateTime today = LocalDateTime.now();
         savedEmp.setUpdatedAt(today);
 
-        //論理削除フラグを立てる
+        //論理削除フラグをたてる
         savedEmp.setDeleteFlag(JpaConst.EMP_DEL_TRUE);
 
         //更新処理を行う
         update(savedEmp);
+
     }
 
     /**
      * 社員番号とパスワードを条件に検索し、データが取得できるかどうかで認証結果を返却する
      * @param code 社員番号
      * @param plainPass パスワード
-     * @param pepper pepper 文字列
-     * @return 認証結果を返却する(成功:true 失敗:false)
+     * @param pepper pepper文字列
+     * @return 認証結果を返却す(成功:true 失敗:false)
      */
     public Boolean validateLogin(String code, String plainPass, String pepper) {
 
@@ -230,7 +230,7 @@ public class EmployeeService extends ServiceBase{
     }
 
     /**
-     * 従業員データを1件取得する
+     * 従業員データを1件登録する
      * @param ev 従業員データ
      * @return 登録結果(成功:true 失敗:false)
      */
@@ -254,5 +254,5 @@ public class EmployeeService extends ServiceBase{
         em.getTransaction().commit();
 
     }
-}
 
+}
