@@ -61,5 +61,4 @@ public class ReportValidator {
         //入力値がある場合は空文字を返却
         return "";
     }
-
 }

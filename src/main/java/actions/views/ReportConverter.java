@@ -45,7 +45,7 @@ public class ReportConverter {
                 r.getTitle(),
                 r.getContent(),
                 r.getCreatedAt(),
-                r.getUpdateedAt());
+                r.getUpdatedAt());
     }
 
     /**
@@ -75,7 +75,7 @@ public class ReportConverter {
         r.setTitle(rv.getTitle());
         r.setContent(rv.getContent());
         r.setCreatedAt(rv.getCreatedAt());
-        r.setUpdateedAt(rv.getUpdatedAt());
+        r.setUpdatedAt(rv.getUpdatedAt());
 
     }
 
