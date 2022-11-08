@@ -66,7 +66,7 @@ public class Report {
     /**
      * いつの日報かを示す日付
      */
-    @Column(name = JpaConst.REP_COL_EMP, nullable = false)
+    @Column(name = JpaConst.REP_COL_REP_DATE, nullable = false)
     private LocalDate reportDate;
 
     /**
@@ -79,7 +79,7 @@ public class Report {
      * 日報の内容
      */
     @Lob
-    @Column(name = JpaConst.REP_COL_CREATED_AT, nullable = false)
+    @Column(name = JpaConst.REP_COL_CONTENT, nullable = false)
     private String content;
 
     /**
@@ -93,7 +93,5 @@ public class Report {
      */
     @Column(name = JpaConst.REP_COL_UPDATED_AT, nullable = false)
     private LocalDateTime updatedAt;
-
-
 
 }
